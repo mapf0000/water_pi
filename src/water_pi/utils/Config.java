@@ -7,19 +7,50 @@ import java.util.Date;
 import java.util.Properties;
 
 public class Config {
+	final String PROPFILENAME = "config.properties";
 	InputStream inputStream;
 	
 	//config variables
-	String userEmail = "";
+	String ownerEmail;
+	String mailAccount;
+	String mailPW;
+	String smtpHost;
+	String smtpPort;
+	String imapHost;
+	String imapPort;
 	double wateringDuration = 0;
 
 	//getters and setters
-	public String getUserEmail() {
-		return userEmail;
+	public String getOwnerEmail() {
+		return ownerEmail;
 	}
 
 	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+		this.ownerEmail = userEmail;
+	}
+	
+	public String getMailAccount() {
+		return mailAccount;
+	}
+
+	public String getMailPW() {
+		return mailPW;
+	}
+	
+	public String getSmtpHost() {
+		return smtpHost;
+	}
+
+	public String getSmtpPort() {
+		return smtpPort;
+	}
+
+	public String getImapHost() {
+		return imapHost;
+	}
+
+	public String getImapPort() {
+		return imapPort;
 	}
 
 	public double getWateringDuration() {
@@ -31,25 +62,26 @@ public class Config {
 	}
 	
 	public void readPropValues() throws IOException {
-		 
 		try {
 			Properties prop = new Properties();
-			String propFileName = "config.properties";
- 
-			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+			inputStream = getClass().getClassLoader().getResourceAsStream(PROPFILENAME);
  
 			if (inputStream != null) {
 				prop.load(inputStream);
 			} else {
-				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+				throw new FileNotFoundException("property file '" + PROPFILENAME + "' not found in the classpath");
 			}
  
 			// get and save property values
-			userEmail = prop.getProperty("userEmail");
+			ownerEmail = prop.getProperty("ownerEmail");
+			mailAccount = prop.getProperty("mailAccount");
+			mailPW = prop.getProperty("mailPW");
+			smtpHost = prop.getProperty("smtpHost");
+			smtpPort = prop.getProperty("smtpPort");
+			imapHost = prop.getProperty("imapHost");
+			imapPort = prop.getProperty("imapPort");
 			wateringDuration = Double.parseDouble(prop.getProperty("wateringDuration"));
- 
-			//result = "Company List = " + company1 + ", " + company2 + ", " + company3;
-			//System.out.println(result + "\nProgram Ran on " + time + " by user=" + user);
+
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
 		} finally {
