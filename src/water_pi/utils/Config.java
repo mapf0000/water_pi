@@ -44,11 +44,9 @@ public class Config {
 				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 			}
  
-			Date time = new Date(System.currentTimeMillis());
- 
-			// get the property value and print it out
-			String userEmail = prop.getProperty("userEmail");
-			String wateringDuration = prop.getProperty("wateringDuration");
+			// get and save property values
+			userEmail = prop.getProperty("userEmail");
+			wateringDuration = Double.parseDouble(prop.getProperty("wateringDuration"));
  
 			//result = "Company List = " + company1 + ", " + company2 + ", " + company3;
 			//System.out.println(result + "\nProgram Ran on " + time + " by user=" + user);

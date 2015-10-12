@@ -3,6 +3,7 @@ package water_pi;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -14,15 +15,21 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class Mail {
-	final static String USER="my.water.pi@gmail.com";
-	final static String PW="wassermarsch123";
-	
-	static Properties mailServerProperties;
-	static Session getMailSession;
-	static MimeMessage mailMessage;
-    static String receivingHost;
+	private String ownerEmail="";
+	private String user="";
+	private String pw="";
+	private Properties mailServerProperties;
+	private Session getMailSession;
+	private MimeMessage mailMessage;
+    private String receivingHost;
     
-	public static void generateAndSendEmail() throws AddressException, MessagingException {
+    public Mail(String ownerEmail, String user, String pw){
+    	this.ownerEmail = ownerEmail;
+    	this.user = user;
+    	this.pw = pw;
+    }
+    
+	public void generateAndSendEmail() throws AddressException, MessagingException {
 		// Step1
 		System.out.println("\n 1st ===> setup Mail Server Properties..");
 		mailServerProperties = System.getProperties();
@@ -36,7 +43,7 @@ public class Mail {
 		System.out.println("\n\n 2nd ===> get Mail Session..");
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 		mailMessage = new MimeMessage(getMailSession);
-		mailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("maximilian.pfister90@gmail.com"));
+		mailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("ownerEmail"));
 		// generateMailMessage.addRecipient(Message.RecipientType.CC, new
 		// InternetAddress("test2@crunchify.com"));
 		mailMessage.setSubject("Greetings from Crunchify..");
@@ -49,12 +56,12 @@ public class Mail {
 		Transport transport = getMailSession.getTransport("smtp");
 
 		// Enter your correct gmail UserID and Password (XXXApp Shah@gmail.com)
-		transport.connect("smtp.gmail.com", USER, PW);
+		transport.connect("smtp.gmail.com", user, pw);
 		transport.sendMessage(mailMessage, mailMessage.getAllRecipients());
 		transport.close();
 	}
 	
-	public static void readGmail(){
+	public void readGmail(){
 		 
         /*this will print subject of all messages in the inbox of sender@gmail.com*/
  
@@ -71,7 +78,7 @@ public class Mail {
  
                     Store store=session2.getStore("imaps");
  
-                    store.connect(receivingHost,USER, PW);
+                    store.connect(receivingHost, user, pw);
  
                     Folder folder=store.getFolder("INBOX");//get inbox
  
@@ -80,30 +87,23 @@ public class Mail {
                     Message message[]=folder.getMessages();
  
                     for(int i=0;i<message.length;i++){
- 
                         //print subjects of all mails in the inbox
- 
                         System.out.println(message[i].getSubject());
                         Address[] froms = message[i].getFrom();
-                        String email = ((InternetAddress) froms[0]).getAddress();
-                        System.out.println(email);
+                        String fromAdress = ((InternetAddress) froms[0]).getAddress();
+                        if(fromAdress.equals(""));
  
                        //Set Delete Flag
-             	       //message[i].setFlag(Flags.Flag.DELETED, true);
- 
+             	       message[i].setFlag(Flags.Flag.DELETED, true);
                     }
- 
                     //close connections
                     // expunges the folder to remove messages which are marked deleted
                     folder.close(true);
                     store.close();
- 
-            } catch (Exception e) {
- 
+            } 
+            catch (Exception e) {
                     System.out.println(e.toString());
- 
             }
- 
     }
 
 }
